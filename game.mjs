@@ -4,6 +4,65 @@ import { ANSI } from "./ansi.mjs";
 import DICTIONARY from "./language.mjs";
 import showSplashScreen from "./splash.mjs";
 
+const MENU_ACTIONS = [
+    makeMenuItem("Play Game (PvC)", function () { startGame(1);}),
+    makeMenuItem("Play Game (PvP)", function () { startGame(2); }),
+    makeMenuItem("Settings", showSettings), 
+    makeMenuItem("Credits", showCredits),
+    makeMenuItem("Quit", exitGame),
+  ];
+  
+  const SETTINGS_MENU = [
+    makeMenuItem("Change language", function () { console.log("Change language");}),
+    makeMenuItem("Change font", function () { console.log("Change font");}),
+    makeMenuItem("Sound settings", function () { console.log("Sound settings"); }),
+    makeMenuItem("Back", function () { /*???*/; }), 
+  ];
+  
+  // The following 4 lines show the menu and make a simulated choice
+  let currentMenu = MENU_ACTIONS; // Sett the current menu
+  showMenu(currentMenu); // Display the menu
+  let menuSelection = getMenuSelection(currentMenu); // simulate the player making a choice 
+  currentMenu[menuSelection].action(); // This is where we INVOKE the menu action
+  
+  // Next three functions are the only three functions we need to support our multi-level menu system
+  function makeMenuItem(description, action) {
+    return { description, action };
+  }
+  
+  function showMenu(menu) {
+    // This functi
+    for (let i = 0; i < menu.length; i++) {
+      console.log(i + 1 + ". " + menu[i].description); // +1 because we start counting at 0
+    }
+  }
+  
+  function getMenuSelection(menu) {
+    // This function simulates getting a selection from the player.
+    // We assume that this function when fully implemented would only return valid selections for the incoming menu.
+    let selection = 3; // Example: Selecting the 3rd item
+    return selection - 1; // -1 because we start counting at 0.
+  }
+  
+  // ------- Following are just dummy functions for what the menu could have been doing -------
+  
+  function startGame(playerCount) {
+    console.log("Player vs " + (playerCount == 1 ? "AI" : "Player"));
+  }
+  
+  function showSettings() {
+    currentMenu = SETTINGS_MENU;
+    showMenu(currentMenu);
+  }
+  
+  function showCredits() {
+    console.log("Credits screen...");
+  }
+  
+  function exitGame() {
+    console.log("Exiting game...");
+  }
+
 const GAME_BOARD_SIZE = 3;
 const PLAYER_1 = 1;
 const PLAYER_2 = -1;
@@ -58,31 +117,6 @@ async function runGame() {
         initializeGame(); // Reset everything related to playing the game
         isPlaying = await playGame(); // run the actual game 
     }
-}
-
-async function showMenu() {
-
-    let choice = -1;  // This variable tracks the choice the player has made. We set it to -1 initially because that is not a valid choice.
-    let validChoice = false;    // This variable tells us if the choice the player has made is one of the valid choices. It is initially set to false because the player has made no choices.
-
-    while (!validChoice) {
-        // Display our menu to the player.
-        clearScreen();
-        print(ANSI.COLOR.YELLOW + "MENU" + ANSI.RESET);
-        print("1. Play Game");
-        print("2. Settings");
-        print("3. Exit Game");
-
-        // Wait for the choice.
-        choice = await askQuestion("");
-
-        // Check to see if the choice is valid.
-        if ([MENU_CHOICES.MENU_CHOICE_START_GAME, MENU_CHOICES.MENU_CHOICE_SHOW_SETTINGS, MENU_CHOICES.MENU_CHOICE_EXIT_GAME].includes(Number(choice))) {
-            validChoice = true;
-        }
-    }
-
-    return choice;
 }
 
 async function playGame() {
