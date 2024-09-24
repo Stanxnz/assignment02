@@ -4,6 +4,23 @@ import { ANSI } from "./ansi.mjs";
 import DICTIONARY from "./language.mjs";
 import showSplashScreen from "./splash.mjs";
 
+const GAME_BOARD_SIZE = 3;
+const PLAYER_1 = 1;
+const PLAYER_2 = -1;
+
+// These are the valid choices for the menu.
+const MENU_CHOICES = {
+    MENU_CHOICE_START_GAME: 1,
+    MENU_CHOICE_SHOW_SETTINGS: 2,
+    MENU_CHOICE_EXIT_GAME: 3
+};
+
+const NO_CHOICE = -1;
+
+let language = DICTIONARY.en;
+let gameboard;
+let currentPlayer;
+
 const MENU_ACTIONS = [
     makeMenuItem("Play Game (PvC)", function () { startGame(1);}),
     makeMenuItem("Play Game (PvP)", function () { startGame(2); }),
@@ -16,7 +33,7 @@ const MENU_ACTIONS = [
     makeMenuItem("Change language", function () { console.log("Change language");}),
     makeMenuItem("Change font", function () { console.log("Change font");}),
     makeMenuItem("Sound settings", function () { console.log("Sound settings"); }),
-    makeMenuItem("Back", function () { /*???*/; }), 
+    makeMenuItem("Back", function () { /*????*/; }), 
   ];
   
   // The following 4 lines show the menu and make a simulated choice
@@ -30,8 +47,9 @@ const MENU_ACTIONS = [
     return { description, action };
   }
   
-  function showMenu(currentMenu) {
-    for (let i = 0; i < currentMenu.length; i++) {
+  function showMenu(menu) {
+    // This functi
+    for (let i = 0; i < menu.length; i++) {
       console.log(i + 1 + ". " + menu[i].description); // +1 because we start counting at 0
     }
   }
@@ -61,24 +79,6 @@ const MENU_ACTIONS = [
   function exitGame() {
     console.log("Exiting game...");
   }
-
-const GAME_BOARD_SIZE = 3;
-const PLAYER_1 = 1;
-const PLAYER_2 = -1;
-
-// These are the valid choices for the menu.
-const MENU_CHOICES = {
-    MENU_CHOICE_START_GAME: 1,
-    MENU_CHOICE_SHOW_SETTINGS: 2,
-    MENU_CHOICE_EXIT_GAME: 3
-};
-
-const NO_CHOICE = -1;
-
-let language = DICTIONARY.en;
-let gameboard;
-let currentPlayer;
-
 
 clearScreen();
 showSplashScreen();
@@ -284,4 +284,3 @@ function clearScreen() {
 
 
 //#endregion
-
