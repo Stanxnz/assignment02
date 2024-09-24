@@ -30,9 +30,8 @@ const MENU_ACTIONS = [
     return { description, action };
   }
   
-  function showMenu(menu) {
-    // This functi
-    for (let i = 0; i < menu.length; i++) {
+  function showMenu(currentMenu) {
+    for (let i = 0; i < currentMenu.length; i++) {
       console.log(i + 1 + ". " + menu[i].description); // +1 because we start counting at 0
     }
   }
