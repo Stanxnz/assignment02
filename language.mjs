@@ -1,7 +1,8 @@
 const DICTIONARY = {
     en: {
         MENU_TITLE: "MENU",
-        PLAY_GAME: "Play Game",
+        PLAY_GAME_PVP: "Play Game (Player vs Player)",
+        PLAY_GAME_PVC: "Play Game (Player vs Computer)",
         SETTINGS: "Settings",
         EXIT_GAME: "Exit Game",
         SETTINGS_TITLE: "SETTINGS",
@@ -12,18 +13,20 @@ const DICTIONARY = {
         PRESS_ENTER_TO_CONTINUE: "Press Enter to continue...",
         PLAY_AGAIN_QUESTION: "Do you want to play again? (y/n)",
         DRAW_GAME: "It's a draw!",
-        WINNER_IS: "Winner is",
+        WINNER_IS: "The winner is",
         PLAYER: "Player",
+        PLAYER_ONE: "one",
+        PLAYER_TWO: "two",
+        PLAYER_TURN: "Player's turn: ",
         GAME_OVER: "GAME OVER",
         PLACE_YOUR_MARK: "Place your mark at: ",
         INVALID_INPUT: "Invalid input. Please enter two numbers between 1 and 3 for a valid position.",
-        PLAYER_ONE: "one",
-        PLAYER_TWO: "two",
-        PLAYER_TURN: "Player"
+        COMPUTER_TURN: "Computer's turn..."
     },
     nl: {
         MENU_TITLE: "MENU",
-        PLAY_GAME: "Speel Spel",
+        PLAY_GAME_PVP: "Speel Spel (Speler tegen Speler)",
+        PLAY_GAME_PVC: "Speel Spel (Speler tegen Computer)",
         SETTINGS: "Instellingen",
         EXIT_GAME: "Stop Spel",
         SETTINGS_TITLE: "INSTELLINGEN",
@@ -36,12 +39,13 @@ const DICTIONARY = {
         DRAW_GAME: "Het is een gelijkspel!",
         WINNER_IS: "De winnaar is",
         PLAYER: "Speler",
+        PLAYER_ONE: "een",
+        PLAYER_TWO: "twee",
+        PLAYER_TURN: "Beurt van speler: ",
         GAME_OVER: "SPEL AFGELOPEN",
         PLACE_YOUR_MARK: "Plaats je markering op: ",
         INVALID_INPUT: "Ongeldige invoer. Voer twee cijfers in tussen 1 en 3 voor een geldige positie.",
-        PLAYER_ONE: "een",
-        PLAYER_TWO: "twee",
-        PLAYER_TURN: "Speler"
+        COMPUTER_TURN: "Beurt van de computer..."
     }
 };
 

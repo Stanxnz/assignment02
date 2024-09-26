@@ -7,12 +7,15 @@ import showSplashScreen from "./splash.mjs";
 const GAME_BOARD_SIZE = 3;
 const PLAYER_1 = 1;
 const PLAYER_2 = -1;
+const COMPUTER_PLAYER = -1;
+
 
 // These are the valid choices for the menu.
 const MENU_CHOICES = {
-    MENU_CHOICE_START_GAME: 1,
-    MENU_CHOICE_SHOW_SETTINGS: 2,
-    MENU_CHOICE_EXIT_GAME: 3
+    MENU_CHOICE_START_PVP: 1,
+    MENU_CHOICE_START_PVC: 2,
+    MENU_CHOICE_SHOW_SETTINGS: 3,
+    MENU_CHOICE_EXIT_GAME: 4
 };
 
 const LANGUAGE_CHOICES = {
@@ -24,6 +27,7 @@ const NO_CHOICE = -1;
 
 let gameboard;
 let currentPlayer;
+let isPvCMODE = false;
 let language = DICTIONARY.en;
 
 
@@ -42,7 +46,11 @@ async function start() {
         let chosenAction = NO_CHOICE;
         chosenAction = await showMenu();
 
-        if (chosenAction == MENU_CHOICES.MENU_CHOICE_START_GAME) {
+        if (chosenAction == MENU_CHOICES.MENU_CHOICE_START_PVP) {
+            isPvCMODE = false;
+            await runGame();
+        } else if (chosenAction == MENU_CHOICES.MENU_CHOICE_START_PVC){
+            isPvCMODE = true;
             await runGame();
         } else if (chosenAction == MENU_CHOICES.MENU_CHOICE_SHOW_SETTINGS) {
             await showSettings();
@@ -73,13 +81,14 @@ async function showMenu() {
     while (!validChoice) {
         clearScreen();
         print(ANSI.COLOR.YELLOW + language.MENU_TITLE + ANSI.RESET);
-        print("1. " + language.PLAY_GAME);
-        print("2. " + language.SETTINGS);
-        print("3. " + language.EXIT_GAME);
+        print("1. " + language.PLAY_GAME_PVP);
+        print("2. " + language.PLAY_GAME_PVC);
+        print("3. " + language.SETTINGS);
+        print("4. " + language.EXIT_GAME);
 
         choice = await askQuestion(" ");
 
-        if ([MENU_CHOICES.MENU_CHOICE_START_GAME, MENU_CHOICES.MENU_CHOICE_SHOW_SETTINGS, MENU_CHOICES.MENU_CHOICE_EXIT_GAME].includes(Number(choice))) {
+        if ([MENU_CHOICES.MENU_CHOICE_START_PVP, MENU_CHOICES.MENU_CHOICE_START_PVC, MENU_CHOICES.MENU_CHOICE_SHOW_SETTINGS, MENU_CHOICES.MENU_CHOICE_EXIT_GAME].includes(Number(choice))) {
             validChoice = true;
         }
     }
@@ -108,8 +117,6 @@ if (choice == 1){
 }
 }
 
-
-
 async function changeLanguage(){
     let choice = NO_CHOICE;
     let validChoice = false;
@@ -137,19 +144,24 @@ async function changeLanguage(){
 }
 
 async function playGame() {
-    // Play game..
     let outcome;
     let isDraw = true;
     do {
         clearScreen();
         showGameBoardWithCurrentState();
         showHUD();
-        let move = await getGameMoveFromtCurrentPlayer();
-        updateGameBoardState(move);
+
+if (isPvCMODE && currentPlayer === COMPUTER_PLAYER){
+    await computerMove();
+} else {
+    let move = await getGameMoveFromtCurrentPlayer();
+    updateGameBoardState(move);
+}
+
         outcome = evaluateGameState();
         changeCurrentPlayer();
         isDraw = true;
-    } while (outcome == 0)
+    } while (outcome == 0);
 
     showGameSummary(outcome);
     return await askWantToPlayAgain();
@@ -179,6 +191,22 @@ function showGameSummary(outcome) {
 function changeCurrentPlayer() {
     currentPlayer *= -1;
 }
+
+async function computerMove(){
+    print(language.COMPUTER_TURN);
+    let availableMoves = [];
+    for (let row = 0; row < GAME_BOARD_SIZE; row++){
+        for (let col = 0; col < GAME_BOARD_SIZE; col++){
+            if (gameboard[row][col] == 0){
+                availableMoves.push([row, col]);
+            }
+        }
+    }
+    const randomMove = availableMoves[Math.floor(Math.random() * availableMoves.length)];
+    updateGameBoardState(randomMove);
+    await new Promise(resolve => setTimeout(resolve, 1000)); //simulates delay so the move is not made instant
+}
+
 
 function evaluateGameState() {
     let sum = 0;
