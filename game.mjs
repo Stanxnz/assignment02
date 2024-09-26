@@ -116,8 +116,12 @@ async function askWantToPlayAgain() {
 
 function showGameSummary(outcome) {
     clearScreen();
+    if (outcome == -2) {
+        print("It's a draw");
+    } else {
     let winningPlayer = (outcome > 0) ? 1 : 2;
     print("Winner is player " + winningPlayer);
+    }
     showGameBoardWithCurrentState();
     print("GAME OVER");
 }
@@ -131,47 +135,55 @@ function evaluateGameState() {
     let state = 0;
     let isDraw = true;
 
-    // Horizontal and vertical checks
+    // Horizontal
     for (let row = 0; row < GAME_BOARD_SIZE; row++) {
+        sum = 0;
         for (let col = 0; col < GAME_BOARD_SIZE; col++) {
             sum += gameboard[row][col];
 
-            if (Math.abs(sum) == 3) {
-                state = sum;
+            if (gameboard[row][col] == 0) {
+                
                 isDraw = false; // Set isDraw to false if a winner is found
-                break; // Exit the loop early
-            } else if (gameboard[row][col] === 0) {
-                isDraw = false; // Set isDraw to false if an empty cell is found
             }
-            sum = 0;
         }
-    }
+            if (Math.abs(sum) == 3) {
+                return sum;
+            }
+        }
+ 
+        for (let col = 0; col < GAME_BOARD_SIZE; col++) {
+            sum = 0;
+            for (let row = 0; row < GAME_BOARD_SIZE; row++) {
+                sum += gameboard[row][col];
+            }
+            if (Math.abs(sum) == 3) {
+                return sum;
+            }
+        }
 
-    // Diagonal checks
-    for (let i = 0; i < GAME_BOARD_SIZE; i++) {
-        sum += gameboard[i][i];
-    }
-    if (Math.abs(sum) == 3) {
-        state = sum;
-        isDraw = false; // Set isDraw to false if a winner is found
-    }
-    sum = 0;
+        sum = 0;
 
+        for (let i = 0; i < GAME_BOARD_SIZE; i++) {
+            sum += gameboard[i][i];
+        }
+        if (Math.abs(sum) == 3) {
+            return sum;
+        }
+        sum = 0;
     for (let i = 0; i < GAME_BOARD_SIZE; i++) {
         sum += gameboard[i][GAME_BOARD_SIZE - 1 - i];
     }
     if (Math.abs(sum) == 3) {
-        state = sum;
-        isDraw = false; // Set isDraw to false if a winner is found
+        return sum; // Return winner if reverse diagonal sum is 3 or -3
     }
-
+            
     // Check for draw
     if (isDraw) {
         state = -2;
     }
 
-    let winner = state / 3;
-    return winner;
+   
+    return 0;
 }
 
 function updateGameBoardState(move) {
@@ -182,10 +194,22 @@ function updateGameBoardState(move) {
 
 async function getGameMoveFromtCurrentPlayer() {
     let position = null;
+    let valid = false;
     do {
         let rawInput = await askQuestion("Place your mark at: ");
-        position = rawInput.split(" ");
-    } while (isValidPositionOnBoard(position) == false)
+        position = rawInput.split(" ").map(Number);
+
+        if (position.length == 2) {
+            position[0] -= 1;
+            position[1] -= 1;
+        }
+
+        if (isValidPositionOnBoard(position)) {
+            valid = true;
+        } else {
+            print("Invalid input. Please enter two numbers between 1 and 3 for a valid position.");
+        }
+    } while (!valid);
 
     return position
 }
@@ -195,8 +219,8 @@ function isValidPositionOnBoard(position) {
         return false; // Invalid input format
     }
 
-    const row = parseInt(position[0]);
-    const col = parseInt(position[1]);
+    const row = (position[0]);
+    const col = (position[1]);
 
     if (isNaN(row) || isNaN(col)) {
         return false; // Not numbers
