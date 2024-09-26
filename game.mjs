@@ -15,11 +15,16 @@ const MENU_CHOICES = {
     MENU_CHOICE_EXIT_GAME: 3
 };
 
+const LANGUAGE_CHOICES = {
+    ENGLISH: 'en',
+    DUTCH: 'nl'
+};
+
 const NO_CHOICE = -1;
 
-let language = DICTIONARY.en;
 let gameboard;
 let currentPlayer;
+let language = DICTIONARY.en;
 
 
 clearScreen();
@@ -54,35 +59,81 @@ async function runGame() {
 
     let isPlaying = true;
 
-    while (isPlaying) { // Do the following until the player dos not want to play anymore. 
-        initializeGame(); // Reset everything related to playing the game
-        isPlaying = await playGame(); // run the actual game 
+    while (isPlaying) {  
+        initializeGame(); 
+        isPlaying = await playGame(); 
     }
 }
 
 async function showMenu() {
 
-    let choice = -1;  // This variable tracks the choice the player has made. We set it to -1 initially because that is not a valid choice.
-    let validChoice = false;    // This variable tells us if the choice the player has made is one of the valid choices. It is initially set to false because the player has made no choices.
+    let choice = -1;  
+    let validChoice = false;  
 
     while (!validChoice) {
-        // Display our menu to the player.
         clearScreen();
-        print(ANSI.COLOR.YELLOW + "MENU" + ANSI.RESET);
-        print("1. Play Game");
-        print("2. Settings");
-        print("3. Exit Game");
+        print(ANSI.COLOR.YELLOW + language.MENU_TITLE + ANSI.RESET);
+        print("1. " + language.PLAY_GAME);
+        print("2. " + language.SETTINGS);
+        print("3. " + language.EXIT_GAME);
 
-        // Wait for the choice.
-        choice = await askQuestion("");
+        choice = await askQuestion(" ");
 
-        // Check to see if the choice is valid.
         if ([MENU_CHOICES.MENU_CHOICE_START_GAME, MENU_CHOICES.MENU_CHOICE_SHOW_SETTINGS, MENU_CHOICES.MENU_CHOICE_EXIT_GAME].includes(Number(choice))) {
             validChoice = true;
         }
     }
 
     return choice;
+}
+
+async function showSettings(){
+    let choice = NO_CHOICE;
+    let validChoice = false;
+
+    while (!validChoice){
+    clearScreen();
+    print(ANSI.COLOR.YELLOW + language.SETTINGS_TITLE + ANSI.RESET);
+    print("1. " + language.LANGUAGE_SETTING);
+    print("2. " + language.RETURN_TO_MENU);
+
+    choice = await askQuestion(" ");
+
+    if ([1, 2].includes(Number(choice))){
+        validChoice = true;
+    }
+}
+if (choice == 1){
+    await changeLanguage();
+}
+}
+
+
+
+async function changeLanguage(){
+    let choice = NO_CHOICE;
+    let validChoice = false;
+
+    while (!validChoice){
+        clearScreen();
+        print(ANSI.COLOR.YELLOW + language.CHOOSE_LANGUAGE + ANSI.RESET);
+        print("1. English");
+        print("2. Dutch (Nederlands)");
+
+        choice = await askQuestion(" ");
+
+        if ([1, 2].includes(Number(choice))){
+            validChoice = true;
+        }
+    }
+    if (choice == 1){
+        language = DICTIONARY.en;
+    } else if (choice ==2){
+        language = DICTIONARY.nl;
+    }
+
+    print(language.LANGUAGE_CHANGED);
+    await askQuestion(language.PRESS_ENTER_TO_CONTINUE);
 }
 
 async function playGame() {
@@ -101,7 +152,6 @@ async function playGame() {
     } while (outcome == 0)
 
     showGameSummary(outcome);
-
     return await askWantToPlayAgain();
 }
 
@@ -117,13 +167,13 @@ async function askWantToPlayAgain() {
 function showGameSummary(outcome) {
     clearScreen();
     if (outcome == -2) {
-        print("It's a draw");
+        print(language.DRAW_GAME);
     } else {
     let winningPlayer = (outcome > 0) ? 1 : 2;
-    print("Winner is player " + winningPlayer);
+    print(language.WINNER_IS + " " + language.PLAYER + " " + winningPlayer);
     }
     showGameBoardWithCurrentState();
-    print("GAME OVER");
+    print(language.GAME_OVER);
 }
 
 function changeCurrentPlayer() {
@@ -132,59 +182,57 @@ function changeCurrentPlayer() {
 
 function evaluateGameState() {
     let sum = 0;
-    let state = 0;
     let isDraw = true;
 
-    // Horizontal
+    // Check Horizontal Rows for a Win
     for (let row = 0; row < GAME_BOARD_SIZE; row++) {
         sum = 0;
         for (let col = 0; col < GAME_BOARD_SIZE; col++) {
             sum += gameboard[row][col];
-
             if (gameboard[row][col] == 0) {
-                
-                isDraw = false; // Set isDraw to false if a winner is found
+                isDraw = false;
             }
-        }
-            if (Math.abs(sum) == 3) {
-                return sum;
-            }
-        }
- 
-        for (let col = 0; col < GAME_BOARD_SIZE; col++) {
-            sum = 0;
-            for (let row = 0; row < GAME_BOARD_SIZE; row++) {
-                sum += gameboard[row][col];
-            }
-            if (Math.abs(sum) == 3) {
-                return sum;
-            }
-        }
-
-        sum = 0;
-
-        for (let i = 0; i < GAME_BOARD_SIZE; i++) {
-            sum += gameboard[i][i];
         }
         if (Math.abs(sum) == 3) {
-            return sum;
+            return sum; 
         }
+    }
+
+    // Check Vertical Columns for a Win
+    for (let col = 0; col < GAME_BOARD_SIZE; col++) {
         sum = 0;
+        for (let row = 0; row < GAME_BOARD_SIZE; row++) {
+            sum += gameboard[row][col];
+        }
+        if (Math.abs(sum) == 3) {
+            return sum; 
+        }
+    }
+
+    // Check Diagonals for a Win
+    sum = 0;
+    for (let i = 0; i < GAME_BOARD_SIZE; i++) {
+        sum += gameboard[i][i];
+    }
+    if (Math.abs(sum) == 3) {
+        return sum; 
+    }
+
+    sum = 0;
     for (let i = 0; i < GAME_BOARD_SIZE; i++) {
         sum += gameboard[i][GAME_BOARD_SIZE - 1 - i];
     }
     if (Math.abs(sum) == 3) {
-        return sum; // Return winner if reverse diagonal sum is 3 or -3
-    }
-            
-    // Check for draw
-    if (isDraw) {
-        state = -2;
+        return sum; 
     }
 
-   
+    if (isDraw) {
+        return -2; 
+    }
+
     return 0;
 }
+
 
 function updateGameBoardState(move) {
     const ROW_ID = 0;
@@ -196,7 +244,7 @@ async function getGameMoveFromtCurrentPlayer() {
     let position = null;
     let valid = false;
     do {
-        let rawInput = await askQuestion("Place your mark at: ");
+        let rawInput = await askQuestion(language.PLACE_YOUR_MARK);
         position = rawInput.split(" ").map(Number);
 
         if (position.length == 2) {
@@ -207,47 +255,44 @@ async function getGameMoveFromtCurrentPlayer() {
         if (isValidPositionOnBoard(position)) {
             valid = true;
         } else {
-            print("Invalid input. Please enter two numbers between 1 and 3 for a valid position.");
+            print(language.INVALID_INPUT);
         }
     } while (!valid);
 
-    return position
+    return position;
 }
 
 function isValidPositionOnBoard(position) {
     if (position.length < 2) {
-        return false; // Invalid input format
+        return false; 
     }
 
     const row = (position[0]);
     const col = (position[1]);
 
     if (isNaN(row) || isNaN(col)) {
-        return false; // Not numbers
+        return false; 
     }
 
     if (row < 0 || row >= GAME_BOARD_SIZE || col < 0 || col >= GAME_BOARD_SIZE) {
-        return false; // Outside board bounds
+        return false; 
     }
 
     if (gameboard[row][col] !== 0) {
-        return false; // Position already taken
+        return false; 
     }
 
     return true;
 }
 
 function showHUD() {
-    let playerDescription = "one";
-    if (PLAYER_2 == currentPlayer) {
-        playerDescription = "two";
-    }
-    print("Player " + playerDescription + " it is your turn");
+    let playerDescription = (PLAYER_2 == currentPlayer) ? language.PLAYER_TWO : language.PLAYER_ONE;
+    print(language.PLAYER_TURN + " " + playerDescription)
 }
 
 function showGameBoardWithCurrentState() {
     for (let currentRow = 0; currentRow < GAME_BOARD_SIZE; currentRow++) {
-        let rowOutput = "";
+        let rowOutput = " ";
         for (let currentCol = 0; currentCol < GAME_BOARD_SIZE; currentCol++) {
             let cell = gameboard[currentRow][currentCol];
             if (cell == 0) {
@@ -256,7 +301,7 @@ function showGameBoardWithCurrentState() {
             else if (cell > 0) {
                 rowOutput += "X ";
             } else {
-                rowOutput += "O  ";
+                rowOutput += "O ";
             }
         }
 
