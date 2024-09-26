@@ -1,4 +1,3 @@
-// Importing ANSI codes from ansi.mjs
 import { ANSI } from './ansi.mjs';
 
 const ART = `
