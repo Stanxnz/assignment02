@@ -315,7 +315,12 @@ function isValidPositionOnBoard(position) {
 
 function showHUD() {
     let playerDescription = (PLAYER_2 == currentPlayer) ? language.PLAYER_TWO : language.PLAYER_ONE;
-    print(language.PLAYER_TURN + " " + playerDescription)
+
+    if (currentPlayer == PLAYER_1){
+        print(ANSI.COLOR.GREEN + language.PLAYER_TURN + " " + playerDescription + ANSI.RESET);
+    } else {
+        print(ANSI.COLOR.RED + language.PLAYER_TURN + " " + playerDescription + ANSI.RESET);
+    }
 }
 
 function showGameBoardWithCurrentState() {
@@ -327,9 +332,9 @@ function showGameBoardWithCurrentState() {
             if (cell === 0) {
                 rowOutput += "   ";  // Empty cell with 3 spaces
             } else if (cell > 0) {
-                rowOutput += " X ";  // Player 1 (X)
+                rowOutput += ANSI.COLOR.GREEN + " X " + ANSI.RESET;  // Player 1 (X)
             } else {
-                rowOutput += " O ";  // Player 2 (O)
+                rowOutput += ANSI.COLOR.RED + " O " + ANSI.RESET;  // Player 2 (O)
             }
             if (currentCol < GAME_BOARD_SIZE - 1) {
                 rowOutput += "|";  // Column divider
