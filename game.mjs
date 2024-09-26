@@ -88,6 +88,7 @@ async function showMenu() {
 async function playGame() {
     // Play game..
     let outcome;
+    let isDraw = true;
     do {
         clearScreen();
         showGameBoardWithCurrentState();
@@ -96,6 +97,7 @@ async function playGame() {
         updateGameBoardState(move);
         outcome = evaluateGameState();
         changeCurrentPlayer();
+        isDraw = true;
     } while (outcome == 0)
 
     showGameSummary(outcome);
@@ -131,54 +133,43 @@ function evaluateGameState() {
 
     // Horizontal and vertical checks
     for (let row = 0; row < GAME_BOARD_SIZE; row++) {
-
         for (let col = 0; col < GAME_BOARD_SIZE; col++) {
             sum += gameboard[row][col];
-        } 
 
-        if (Math.abs(sum) == 3) {
-            state = sum;
-        } else if (gameboard[row][col] === 0) {
-            isDraw = false;
+            if (Math.abs(sum) == 3) {
+                state = sum;
+                isDraw = false; // Set isDraw to false if a winner is found
+                break; // Exit the loop early
+            } else if (gameboard[row][col] === 0) {
+                isDraw = false; // Set isDraw to false if an empty cell is found
+            }
+            sum = 0;
         }
-        sum = 0;
     }
 
-    for (let col = 0; col < GAME_BOARD_SIZE; col++) {
+    // Diagonal checks
+    for (let i = 0; i < GAME_BOARD_SIZE; i++) {
+        sum += gameboard[i][i];
+    }
+    if (Math.abs(sum) == 3) {
+        state = sum;
+        isDraw = false; // Set isDraw to false if a winner is found
+    }
+    sum = 0;
 
-        for (let row = 0; row < GAME_BOARD_SIZE; row++) {
-            sum += gameboard[row][col];
-        } 
-
-        if (Math.abs(sum) == 3) {
-            state = sum;
-        } else if (gameboard[row][col] === 0) {
-            isDraw = false;
-        }
-
-        sum = 0;
+    for (let i = 0; i < GAME_BOARD_SIZE; i++) {
+        sum += gameboard[i][GAME_BOARD_SIZE - 1 - i];
+    }
+    if (Math.abs(sum) == 3) {
+        state = sum;
+        isDraw = false; // Set isDraw to false if a winner is found
     }
 
-// Diagonal checks
-for (let i = 0; i < GAME_BOARD_SIZE; i++){
-    sum += gameboard[i][i];
-}
-if (Math.abs(sum)== 3) {
-    state=sum;
-}
-sum=0;
+    // Check for draw
+    if (isDraw) {
+        state = -2;
+    }
 
-for (let i = 0; i < GAME_BOARD_SIZE; i++){
-    sum += gameboard[i][GAME_BOARD_SIZE -1 - i];
-}
-if (Math.abs(sum)== 3){
-    state=sum;
-}
-
-// Check for draw
-if (isDraw){
-    state=-2;
-}
     let winner = state / 3;
     return winner;
 }
