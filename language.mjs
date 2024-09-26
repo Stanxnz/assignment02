@@ -1,8 +1,8 @@
 const DICTIONARY = {
     en: {
         MENU_TITLE: "Main Menu",
-        PLAY_GAME_PVP: "Play Player vs Player",
-        PLAY_GAME_PVC: "Play Player vs Computer",
+        PLAY_GAME_PVP: "PVP (Player vs Player)",
+        PLAY_GAME_PVC: "PVC (Player vs Computer)",
         SETTINGS: "Settings",
         EXIT_GAME: "Exit Game",
         LANGUAGE_SETTING: "Change Language",
