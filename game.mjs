@@ -9,8 +9,6 @@ const PLAYER_1 = 1;
 const PLAYER_2 = -1;
 const COMPUTER_PLAYER = -1;
 
-
-// These are the valid choices for the menu.
 const MENU_CHOICES = {
     MENU_CHOICE_START_PVP: 1,
     MENU_CHOICE_START_PVC: 2,
@@ -33,11 +31,7 @@ let language = DICTIONARY.en;
 
 clearScreen();
 showSplashScreen();
-setTimeout(start, 2500); // This waites 2.5seconds before calling the function. i.e. we get to see the splash screen for 2.5 seconds before the menue takes over. 
-
-
-
-//#region game functions -----------------------------
+setTimeout(start, 2500);  
 
 async function start() {
 
@@ -204,7 +198,7 @@ async function computerMove(){
     }
     const randomMove = availableMoves[Math.floor(Math.random() * availableMoves.length)];
     updateGameBoardState(randomMove);
-    await new Promise(resolve => setTimeout(resolve, 1000)); //simulates delay so the move is not made instant
+    await new Promise(resolve => setTimeout(resolve, 1000)); 
 }
 
 
@@ -212,7 +206,6 @@ function evaluateGameState() {
     let sum = 0;
     let isDraw = true;
 
-    // Check Horizontal Rows for a Win
     for (let row = 0; row < GAME_BOARD_SIZE; row++) {
         sum = 0;
         for (let col = 0; col < GAME_BOARD_SIZE; col++) {
@@ -226,7 +219,6 @@ function evaluateGameState() {
         }
     }
 
-    // Check Vertical Columns for a Win
     for (let col = 0; col < GAME_BOARD_SIZE; col++) {
         sum = 0;
         for (let row = 0; row < GAME_BOARD_SIZE; row++) {
@@ -237,7 +229,6 @@ function evaluateGameState() {
         }
     }
 
-    // Check Diagonals for a Win
     sum = 0;
     for (let i = 0; i < GAME_BOARD_SIZE; i++) {
         sum += gameboard[i][i];
@@ -324,25 +315,25 @@ function showHUD() {
 }
 
 function showGameBoardWithCurrentState() {
-    print("\n     1   2   3");  // Column numbers for reference
+    print("\n     1   2   3"); 
     for (let currentRow = 0; currentRow < GAME_BOARD_SIZE; currentRow++) {
-        let rowOutput = " " + (currentRow + 1) + " ";  // Row number display
+        let rowOutput = " " + (currentRow + 1) + " "; 
         for (let currentCol = 0; currentCol < GAME_BOARD_SIZE; currentCol++) {
             let cell = gameboard[currentRow][currentCol];
             if (cell === 0) {
-                rowOutput += "   ";  // Empty cell with 3 spaces
+                rowOutput += "   ";  
             } else if (cell > 0) {
-                rowOutput += ANSI.COLOR.GREEN + " X " + ANSI.RESET;  // Player 1 (X)
+                rowOutput += ANSI.COLOR.GREEN + " X " + ANSI.RESET; 
             } else {
-                rowOutput += ANSI.COLOR.RED + " O " + ANSI.RESET;  // Player 2 (O)
+                rowOutput += ANSI.COLOR.RED + " O " + ANSI.RESET; 
             }
             if (currentCol < GAME_BOARD_SIZE - 1) {
-                rowOutput += "|";  // Column divider
+                rowOutput += "|"; 
             }
         }
         print(rowOutput);
         if (currentRow < GAME_BOARD_SIZE - 1) {
-            print("   -----------");  // Row divider
+            print("   -----------"); 
         }
     }
 }
@@ -372,6 +363,3 @@ function createGameBoard() {
 function clearScreen() {
     console.log(ANSI.CLEAR_SCREEN, ANSI.CURSOR_HOME, ANSI.RESET);
 }
-
-
-//#endregion
