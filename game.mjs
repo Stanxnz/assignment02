@@ -181,8 +181,8 @@ function showGameSummary(outcome) {
     if (outcome == -2) {
         print(language.DRAW_GAME);
     } else {
-    let winningPlayer = (outcome > 0) ? 1 : 2;
-    print(language.WINNER_IS + " " + language.PLAYER + " " + winningPlayer);
+    let winningPlayer = (outcome > 0) ? language.PLAYER_ONE : language.PLAYER_TWO;
+    print(language.WINNER_IS + " " +  winningPlayer);
     }
     showGameBoardWithCurrentState();
     print(language.GAME_OVER);
@@ -319,23 +319,29 @@ function showHUD() {
 }
 
 function showGameBoardWithCurrentState() {
+    print("\n     1   2   3");  // Column numbers for reference
     for (let currentRow = 0; currentRow < GAME_BOARD_SIZE; currentRow++) {
-        let rowOutput = " ";
+        let rowOutput = " " + (currentRow + 1) + " ";  // Row number display
         for (let currentCol = 0; currentCol < GAME_BOARD_SIZE; currentCol++) {
             let cell = gameboard[currentRow][currentCol];
-            if (cell == 0) {
-                rowOutput += "_ ";
-            }
-            else if (cell > 0) {
-                rowOutput += "X ";
+            if (cell === 0) {
+                rowOutput += "   ";  // Empty cell with 3 spaces
+            } else if (cell > 0) {
+                rowOutput += " X ";  // Player 1 (X)
             } else {
-                rowOutput += "O ";
+                rowOutput += " O ";  // Player 2 (O)
+            }
+            if (currentCol < GAME_BOARD_SIZE - 1) {
+                rowOutput += "|";  // Column divider
             }
         }
-
         print(rowOutput);
+        if (currentRow < GAME_BOARD_SIZE - 1) {
+            print("   -----------");  // Row divider
+        }
     }
 }
+
 
 function initializeGame() {
     gameboard = createGameBoard();

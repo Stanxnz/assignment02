@@ -25,8 +25,8 @@ const DICTIONARY = {
     },
     nl: {
         MENU_TITLE: "Hoofdmenu",
-        PLAY_GAME_PVP: "Spelen Speler tegen Speler",
-        PLAY_GAME_PVC: "Spelen Speler tegen Computer",
+        PLAY_GAME_PVP: "PTP (Speler tegen Speler)",
+        PLAY_GAME_PVC: "PTC (Speler tegen Computer)",
         SETTINGS: "Instellingen",
         EXIT_GAME: "Spel Afsluiten",
         LANGUAGE_SETTING: "Taal Wijzigen",
