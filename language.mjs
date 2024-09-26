@@ -21,7 +21,9 @@ const DICTIONARY = {
         GAME_OVER: "GAME OVER",
         PLACE_YOUR_MARK: "Place your mark at: ",
         INVALID_INPUT: "Invalid input. Please enter two numbers between 1 and 3 for a valid position.",
-        COMPUTER_TURN: "Computer's turn..."
+        COMPUTER_TURN: "Computer's turn...",
+        HUMAN_PLAYER: "Human",
+        COMPUTER_PLAYER: "Computer"
     },
     nl: {
         MENU_TITLE: "MENU",
@@ -45,7 +47,9 @@ const DICTIONARY = {
         GAME_OVER: "SPEL AFGELOPEN",
         PLACE_YOUR_MARK: "Plaats je markering op: ",
         INVALID_INPUT: "Ongeldige invoer. Voer twee cijfers in tussen 1 en 3 voor een geldige positie.",
-        COMPUTER_TURN: "Beurt van de computer..."
+        COMPUTER_TURN: "Beurt van de computer...",
+        HUMAN_PLAYER: "Mens",
+        COMPUTER_PLAYER: "Computer"
     }
 };
 
