@@ -155,7 +155,19 @@ console.log("Task: D");
 const numbers = [1, 23, 14, 56, 42, 33, 0, 3];
 const target = 36;
 
+function findProvidedSum(number, target){
+    for (let i = 0; i < numbers.length; i++){
+        for (let j = i + 1; j < numbers.length; j++){
+            if (numbers[i] + numbers[j] === target){
+                return [numbers[i], numbers[j]];
+            }
+        }
+    }
+    return[];
+}
 
+let result = findProvidedSum(numbers, target);
+console.log("provided sum:", result);
 
 
 /* -----------------------------------------------------------------------------
@@ -166,3 +178,17 @@ const target = 36;
     42693 -> 5
 */
 console.log("Task: E");
+
+function returnNumberOfDigits(number){
+    if (number === 0) return 1;
+    let digitCount = 0;
+    while (number !==0){
+        number = Math.floor(number / 10);
+        digitCount++;
+    }
+    return digitCount;
+}
+
+console.log(returnNumberOfDigits(123));    
+console.log(returnNumberOfDigits(2));      
+console.log(returnNumberOfDigits(42693));  
