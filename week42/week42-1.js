@@ -102,9 +102,40 @@ console.log("Merged Arrays without duplicates:", mergedArrayNoDuplicates);
     Use arrays and for loops. 
 */
 console.log("Task: C");
-const ALPHABET = "abcdefghijklmnopqrstuvwxyz"
-const message = "ckrr jutk"
-let shift = 6
+const ALPHABET = "abcdefghijklmnopqrstuvwxyz";
+const message = "ckrr jutk";
+let shift = 6;
+
+function messageDecrypter(message, ALPHABET, shift){
+    
+    let decryptedMessage = "";
+
+    for (let i = 0; i < message.length; i++){
+        let char = message[i];
+        let isAlphabetChar = false;
+        let originalIndex = -1;
+
+        for (let j = 0; j < ALPHABET.length; j++){
+            let shiftedIndex = j + shift;
+            while (shiftedIndex >= ALPHABET.length){
+                shiftedIndex -= ALPHABET.length;
+            }
+            if (char === ALPHABET[shiftedIndex]){
+                originalIndex = j;
+                isAlphabetChar = true;
+            }
+        }
+        
+        if (isAlphabetChar) {
+            decryptedMessage += ALPHABET[originalIndex];
+        } else {
+            decryptedMessage += char;
+        }
+    }
+    return decryptedMessage;
+}
+
+console.log("Decrypted message:", messageDecrypter(message, ALPHABET, shift));
 
 /* -----------------------------------------------------------------------------
     Task: D
