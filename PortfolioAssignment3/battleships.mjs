@@ -8,8 +8,8 @@ import createInnBetweenScreen from "./game/innbetweenScreen.mjs";
 import createBattleshipScreen from "./game/battleshipsScreen.mjs";
 
 const MAIN_MENU_ITEMS = buildMenu();
-const MIN_WIDTH = 800;
-const MIN_HEIGHT = 600;
+const MIN_WIDTH = 80;
+const MIN_HEIGHT = 24;
 
 const GAME_FPS = 1000 / 60; // The theoretical refresh rate of our game engine
 let currentState = null;    // The current active state in our finite-state machine.
@@ -18,17 +18,21 @@ let gameLoop = null;        // Variable that keeps a refrence to the interval id
 let mainMenuScene = null;
 
 function checkResolution(){
-    if (window.innerWidth<MIN_WIDTH){
-        console.log("Your screen width is too low to start the game. Please resize it.")
+    if (process.stdout.columns<MIN_WIDTH){
+        console.log("Your screen width is too low to start the game. Please resize it.");
         return false;
-    }else if (window.innerHeight<MIN_HEIGHT){
-        console.log("Your screen height is too low to start the game. Please resize it.")
+    }else if (process.stdout.rows<MIN_HEIGHT){
+        console.log("Your screen height is too low to start the game. Please resize it.");
         return false;
     }
     return true;
 }
 
 (function initialize() {
+    if (!checkResolution()){
+        console.log("Game cannot start because you have insufficient resolution.");
+        return;
+    }
     print(ANSI.HIDE_CURSOR);
     clearScreen();
     mainMenuScene = createMenu(MAIN_MENU_ITEMS);
